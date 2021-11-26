@@ -10,7 +10,7 @@ import com.example.sentiance.databinding.ActivityMainBinding
 import com.example.sentiance.permission.location.hasLocationPermissions
 import com.example.sentiance.permission.location.onLocationPermissionResult
 import com.example.sentiance.sdk.LocationProviderSDK
-import com.example.sentiance.sdk.NativeLocationProviderSDK
+import com.example.sentiance.sdk.NativeNetworkLocationProviderSDK
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val locationProviderSDK: LocationProviderSDK by lazy {
-        NativeLocationProviderSDK(this)
+        NativeNetworkLocationProviderSDK(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
+        hasLocationPermissions = hasLocationPermissions()
+
         mapFragment.getMapAsync {
             googleMap = it
             setMapLocationListener()
@@ -50,8 +52,6 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun setMapLocationListener() {
-
-        hasLocationPermissions = hasLocationPermissions()
 
         googleMap.isMyLocationEnabled = hasLocationPermissions
 

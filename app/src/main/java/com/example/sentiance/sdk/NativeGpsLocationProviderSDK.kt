@@ -8,7 +8,10 @@ import android.location.LocationManager.GPS_PROVIDER
 import com.google.android.gms.maps.model.LatLng
 import java.util.concurrent.TimeUnit
 
-class NativeLocationProviderSDK(context: Context) : LocationProviderSDK {
+/**
+ * Uses only GPS to query device location using android api's
+ */
+class NativeGpsLocationProviderSDK(context: Context) : LocationProviderSDK {
     private val locationManager =
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -37,8 +40,8 @@ class NativeLocationProviderSDK(context: Context) : LocationProviderSDK {
 
         locationManager.requestLocationUpdates(
             GPS_PROVIDER,
-            TimeUnit.SECONDS.toMillis(5),
-            0f, // meters
+            TimeUnit.SECONDS.toMillis(5), // Same as below
+            0f, // meters and this distance been set to 0 for easier testing purposes.
             locationListener
         )
 
