@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Sentiance</string>
+    <string name="enter_radius_in_meters">Enter Radius in meters</string>
+    <string name="location_required">Location is required.</string>
 </resources>
