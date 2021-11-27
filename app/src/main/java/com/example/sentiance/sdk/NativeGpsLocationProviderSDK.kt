@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 import java.util.concurrent.TimeUnit
 
 /**
- * Uses only GPS to query device location using android api's
+ * Uses only GPS to query approximate device location using android api's
  */
 class NativeGpsLocationProviderSDK(context: Context) : LocationProviderSDK {
     private val locationManager =
@@ -20,7 +20,14 @@ class NativeGpsLocationProviderSDK(context: Context) : LocationProviderSDK {
     private var locationAge = 0L
 
     @SuppressLint("MissingPermission")
-    override fun getCurrentLocationUpdates(locationCallBack: (LatLng) -> Unit) {
+    override fun getCurrentLocationUpdates(
+        locationCallBack: (LatLng) -> Unit,
+        errorCallback: (String) -> Unit
+    ) {
+        if (locationManager.isProviderEnabled(GPS_PROVIDER).not()) {
+            errorCallback("GPS Disabled")
+            return
+        }
 
         val isCachedLocationOld =
             System.currentTimeMillis() - locationAge >= TimeUnit.MINUTES.toMillis(5)

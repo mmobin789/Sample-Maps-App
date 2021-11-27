@@ -10,8 +10,7 @@ import com.example.sentiance.databinding.ActivityMainBinding
 import com.example.sentiance.di.DI
 import com.example.sentiance.permission.location.hasLocationPermissions
 import com.example.sentiance.permission.location.onLocationPermissionResult
-import com.example.sentiance.sdk.LocationProviderSDK
-import com.example.sentiance.sdk.NativeNetworkLocationProviderSDK
+import com.example.sentiance.ui.states.UserLocationState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -31,12 +30,7 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    private val locationProviderSDK: LocationProviderSDK by lazy {
-        NativeNetworkLocationProviderSDK(this)
-    }
-
-    private val mainActivityViewModel: MainActivityViewModel by viewModel()
-
+    private val viewModel: MainActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,28 +65,40 @@ class MainActivity : AppCompatActivity() {
         if (hasLocationPermissions.not())
             return
 
-        locationProviderSDK.getCurrentLocationUpdates { latLng ->
+        viewModel.getCurrentLocationUpdates(false)
 
-            geoFence?.run {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(center, 16f))
-                val results = floatArrayOf(0f) // distance b/w user's location and circle's center.
-                Location.distanceBetween(
-                    latLng.latitude,
-                    latLng.longitude,
-                    center.latitude,
-                    center.longitude,
-                    results
-                )
-                val distance = results[0]
-                val message = if (distance <= radius) {
-                    // inside circle
-                    "Inside Circle"
-                } else {
-                    // outside circle
-                    "Outside Circle"
+        viewModel.state().observe(this) { state ->
+
+            when (state) {
+                is UserLocationState.Success -> {
+                    geoFence?.run {
+                        val latLng = state.userLocation
+
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(center, 16f))
+                        val results =
+                            floatArrayOf(0f) // distance b/w user's location and circle's center.
+                        Location.distanceBetween(
+                            latLng.latitude,
+                            latLng.longitude,
+                            center.latitude,
+                            center.longitude,
+                            results
+                        )
+                        val distance = results[0]
+                        val message = if (distance <= radius) {
+                            // inside circle
+                            "Inside Circle"
+                        } else {
+                            // outside circle
+                            "Outside Circle"
+                        }
+                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT)
-                    .show()
+
+                is UserLocationState.Error -> {
+                }
             }
         }
     }
@@ -130,7 +136,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        locationProviderSDK.stopLocationUpdates()
+        viewModel.stopLocationUpdates()
         super.onPause()
     }
 
