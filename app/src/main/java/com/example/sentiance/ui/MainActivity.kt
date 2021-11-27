@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sentiance.R
 import com.example.sentiance.databinding.ActivityMainBinding
+import com.example.sentiance.di.DI
 import com.example.sentiance.permission.location.hasLocationPermissions
 import com.example.sentiance.permission.location.onLocationPermissionResult
 import com.example.sentiance.sdk.LocationProviderSDK
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +35,9 @@ class MainActivity : AppCompatActivity() {
         NativeNetworkLocationProviderSDK(this)
     }
 
+    private val mainActivityViewModel: MainActivityViewModel by viewModel()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -40,6 +45,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
+
+        DI.start(this)
+
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
         hasLocationPermissions = hasLocationPermissions()
