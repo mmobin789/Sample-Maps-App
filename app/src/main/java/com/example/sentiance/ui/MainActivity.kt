@@ -1,7 +1,10 @@
 package com.example.sentiance.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
+import android.os.BatteryManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -62,10 +65,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun getCurrentLocationUpdates() {
 
+        val lowBattery = checkBatteryStateOptimal().not()
+
         if (hasLocationPermissions.not())
             return
 
-        viewModel.getCurrentLocationUpdates(false)
+        viewModel.getCurrentLocationUpdates(lowBattery)
 
         viewModel.state().observe(this) { state ->
 
@@ -87,10 +92,10 @@ class MainActivity : AppCompatActivity() {
                         val distance = results[0]
                         val message = if (distance <= radius) {
                             // inside circle
-                            "Inside Circle"
+                            getString(R.string.user_inside)
                         } else {
                             // outside circle
-                            "Outside Circle"
+                            getString(R.string.user_outside)
                         }
                         Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT)
                             .show()
@@ -117,6 +122,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkBatteryStateOptimal(): Boolean {
+        val batteryStatus = registerReceiver(
+            null,
+            IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        )
+
+        val batteryPct: Float? = batteryStatus?.let { intent ->
+            val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+            val scale: Int = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+            level * 100 / scale.toFloat()
+        }
+
+        return batteryPct != null && batteryPct >= 50f
+    }
+
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -128,10 +148,11 @@ class MainActivity : AppCompatActivity() {
         onLocationPermissionResult(requestCode, grantResults) { granted ->
 
             googleMap.isMyLocationEnabled = granted
+            hasLocationPermissions = granted
 
-            if (granted)
+            if (granted) {
                 getCurrentLocationUpdates()
-            else Toast.makeText(this, R.string.location_required, Toast.LENGTH_SHORT).show()
+            } else Toast.makeText(this, R.string.location_required, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -53,7 +53,7 @@ class NativeNetworkLocationProviderSDK(context: Context) : LocationProviderSDK {
 
         locationManager.requestLocationUpdates(
             NETWORK_PROVIDER,
-            TimeUnit.SECONDS.toMillis(5), // Same as below
+            TimeUnit.SECONDS.toMillis(10), // Same as below
             0f, // meters and this distance been set to 0 for easier testing purposes.
             locationListener
         )

@@ -9,6 +9,9 @@ class GetLocationInGeoFenceUseCase(private val locationRepository: LocationRepos
         errorCallback: (String) -> Unit,
         lowBattery: Boolean
     ) {
-        locationRepository.getCurrentLocationUpdatesPrecise(locationCallBack, errorCallback)
+        if (lowBattery)
+            locationRepository.getCurrentLocationUpdatesApproximate(locationCallBack, errorCallback)
+        else
+            locationRepository.getCurrentLocationUpdatesPrecise(locationCallBack, errorCallback)
     }
 }

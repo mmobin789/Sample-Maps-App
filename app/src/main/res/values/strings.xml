@@ -2,4 +2,6 @@
     <string name="app_name">Sentiance</string>
     <string name="enter_radius_in_meters">Enter Radius in meters</string>
     <string name="location_required">Location is required.</string>
+    <string name="user_inside">User is inside geofence</string>
+    <string name="user_outside">User is outside geofence</string>
 </resources>
