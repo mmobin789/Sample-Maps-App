@@ -1,13 +1,17 @@
 package com.example.sentiance.ui
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.location.Location
 import android.os.BatteryManager
+import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import com.example.sentiance.R
 import com.example.sentiance.databinding.ActivityMainBinding
 import com.example.sentiance.di.DI
@@ -35,6 +39,10 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModel()
 
+    private val notificationManager by lazy {
+        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -53,6 +61,8 @@ class MainActivity : AppCompatActivity() {
             googleMap = it
             setMapLocationListener()
         }
+
+        createNotificationChannel()
     }
 
     @SuppressLint("MissingPermission")
@@ -97,12 +107,12 @@ class MainActivity : AppCompatActivity() {
                             // outside circle
                             getString(R.string.txt_user_outside_geofence)
                         }
-                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT)
-                            .show()
+                        showNotification(message)
                     }
                 }
 
                 is UserLocationState.Error -> {
+                    state.error?.let { showNotification(it) }
                 }
             }
         }
@@ -152,7 +162,7 @@ class MainActivity : AppCompatActivity() {
 
             if (granted) {
                 getCurrentLocationUpdates()
-            } else Toast.makeText(this, R.string.err_location_required, Toast.LENGTH_SHORT).show()
+            } else showNotification(getString(R.string.err_location_required))
         }
     }
 
@@ -164,5 +174,33 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         getCurrentLocationUpdates()
         super.onResume()
+    }
+
+    private fun showNotification(textContent: String) {
+        val builder = NotificationCompat.Builder(this, "CHANNEL_ID")
+            .setContentTitle("Geofence Entry/Exit")
+            .setContentText(textContent)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+
+        notificationManager.notify(1, builder.build())
+
+
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.app_name)
+            val descriptionText = "Geofence"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("CHANNEL_ID", name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }
