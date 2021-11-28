@@ -6,13 +6,14 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.location.LocationManager.GPS_PROVIDER
 import android.location.LocationManager.NETWORK_PROVIDER
+import com.example.sentiance.R
 import com.google.android.gms.maps.model.LatLng
 import java.util.concurrent.TimeUnit
 
 /**
  * Uses GPS and network to query precise device location using android api's
  */
-class NativeNetworkLocationProviderSDK(context: Context) : LocationProviderSDK {
+class NativeNetworkLocationProviderSDK(private val context: Context) : LocationProviderSDK {
     private val locationManager =
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -27,11 +28,11 @@ class NativeNetworkLocationProviderSDK(context: Context) : LocationProviderSDK {
     ) {
 
         if (locationManager.isProviderEnabled(NETWORK_PROVIDER).not()) {
-            errorCallback("Network is disabled location may not be precise")
+            errorCallback(context.getString(R.string.no_network))
         }
 
         if (locationManager.isProviderEnabled(GPS_PROVIDER).not()) {
-            errorCallback("GPS Disabled")
+            errorCallback(context.getString(R.string.no_gps))
             return
         }
 

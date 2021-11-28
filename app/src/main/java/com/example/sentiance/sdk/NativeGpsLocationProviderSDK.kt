@@ -5,13 +5,14 @@ import android.content.Context
 import android.location.LocationListener
 import android.location.LocationManager
 import android.location.LocationManager.GPS_PROVIDER
+import com.example.sentiance.R
 import com.google.android.gms.maps.model.LatLng
 import java.util.concurrent.TimeUnit
 
 /**
  * Uses only GPS to query approximate device location using android api's
  */
-class NativeGpsLocationProviderSDK(context: Context) : LocationProviderSDK {
+class NativeGpsLocationProviderSDK(private val context: Context) : LocationProviderSDK {
     private val locationManager =
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -25,7 +26,7 @@ class NativeGpsLocationProviderSDK(context: Context) : LocationProviderSDK {
         errorCallback: (String) -> Unit
     ) {
         if (locationManager.isProviderEnabled(GPS_PROVIDER).not()) {
-            errorCallback("GPS Disabled")
+            errorCallback(context.getString(R.string.no_gps))
             return
         }
 

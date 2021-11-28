@@ -4,4 +4,6 @@
     <string name="location_required">Location is required.</string>
     <string name="user_inside">User is inside geofence</string>
     <string name="user_outside">User is outside geofence</string>
+    <string name="no_network">Network is disabled location may not be precise</string>
+    <string name="no_gps">GPS Disabled</string>
 </resources>
