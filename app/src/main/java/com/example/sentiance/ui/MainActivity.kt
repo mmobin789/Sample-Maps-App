@@ -179,13 +179,11 @@ class MainActivity : AppCompatActivity() {
     private fun showNotification(textContent: String) {
         val builder = NotificationCompat.Builder(this, "CHANNEL_ID")
             .setContentTitle("Geofence Entry/Exit")
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentText(textContent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-
         notificationManager.notify(1, builder.build())
-
-
     }
 
     private fun createNotificationChannel() {
