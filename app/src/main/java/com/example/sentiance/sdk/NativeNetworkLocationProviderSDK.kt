@@ -28,11 +28,11 @@ class NativeNetworkLocationProviderSDK(private val context: Context) : LocationP
     ) {
 
         if (locationManager.isProviderEnabled(NETWORK_PROVIDER).not()) {
-            errorCallback(context.getString(R.string.no_network))
+            errorCallback(context.getString(R.string.err_no_network_only_gps))
         }
 
         if (locationManager.isProviderEnabled(GPS_PROVIDER).not()) {
-            errorCallback(context.getString(R.string.no_gps))
+            errorCallback(context.getString(R.string.err_no_gps))
             return
         }
 

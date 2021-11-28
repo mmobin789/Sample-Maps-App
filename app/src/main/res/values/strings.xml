@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Sentiance</string>
-    <string name="enter_radius_in_meters">Enter Radius in meters</string>
-    <string name="location_required">Location is required.</string>
-    <string name="user_inside">User is inside geofence</string>
-    <string name="user_outside">User is outside geofence</string>
-    <string name="no_network">Network is disabled location may not be precise</string>
-    <string name="no_gps">GPS Disabled</string>
+    <string name="txt_enter_radius_in_meters">Enter Radius in meters</string>
+    <string name="err_location_required">Location is required.</string>
+    <string name="txt_user_inside_geofence">User is inside geofence</string>
+    <string name="txt_user_outside_geofence">User is outside geofence</string>
+    <string name="err_no_network_only_gps">Network is disabled location may not be precise</string>
+    <string name="err_no_gps">GPS Disabled</string>
 </resources>

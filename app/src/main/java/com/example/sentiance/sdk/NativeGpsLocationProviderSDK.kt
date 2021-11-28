@@ -26,7 +26,7 @@ class NativeGpsLocationProviderSDK(private val context: Context) : LocationProvi
         errorCallback: (String) -> Unit
     ) {
         if (locationManager.isProviderEnabled(GPS_PROVIDER).not()) {
-            errorCallback(context.getString(R.string.no_gps))
+            errorCallback(context.getString(R.string.err_no_gps))
             return
         }
 

@@ -22,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:hint="@string/enter_radius_in_meters"
+        android:hint="@string/txt_enter_radius_in_meters"
         android:importantForAutofill="no"
         android:inputType="numberDecimal"
         android:padding="16dp"

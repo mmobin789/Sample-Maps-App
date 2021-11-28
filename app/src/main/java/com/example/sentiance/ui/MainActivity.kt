@@ -92,10 +92,10 @@ class MainActivity : AppCompatActivity() {
                         val distance = results[0]
                         val message = if (distance <= radius) {
                             // inside circle
-                            getString(R.string.user_inside)
+                            getString(R.string.txt_user_inside_geofence)
                         } else {
                             // outside circle
-                            getString(R.string.user_outside)
+                            getString(R.string.txt_user_outside_geofence)
                         }
                         Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT)
                             .show()
@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
 
             if (granted) {
                 getCurrentLocationUpdates()
-            } else Toast.makeText(this, R.string.location_required, Toast.LENGTH_SHORT).show()
+            } else Toast.makeText(this, R.string.err_location_required, Toast.LENGTH_SHORT).show()
         }
     }
 
